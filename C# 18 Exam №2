@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 namespace Project
 {
@@ -45,8 +46,9 @@ namespace Project
         public Role Role { get; }
         public DateTime Date { get; }
         public int OvertimeHours { get; }
-        public OverTime(int employeeId, DateTime date, int overtimeHours)
+        public OverTime(int employeeId, Role role, DateTime date, int overtimeHours)
         {
+            Role = role;
             EmployeeId = employeeId;
             Date = date;
             OvertimeHours = overtimeHours;
@@ -75,11 +77,13 @@ namespace Project
             {
                 Console.WriteLine($"[INFO]: Employee ID {empId} completed a long shift ({log.hours} hours). Standard 8-hour limit exceeded.");
             }
-            if (log.hours > 6 || date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+            bool isWeekend = date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+            int overtimeFromHours = log.hours > 8 ? log.hours - 8 : 0;
+            int overtimeFromWeekend = isWeekend ? log.hours : 0;
+            int OvertimeHours = overtimeFromHours + overtimeFromWeekend;
+            if (OvertimeHours > 0)
             {
-                int OvertimeHours = log.hours > 6 ? log.hours - 6 : log.hours;
-
-                OverTime args = new OverTime(empId, date, OvertimeHours);
+                OverTime args = new OverTime(empId, emp.Position, date, OvertimeHours);
                 OverTimeDetected?.Invoke(this, args);
             }
         }
@@ -169,9 +173,8 @@ namespace Project
             system.RegisterShift(1, DateTime.Today, new TimeSpan(11, 0, 0), new TimeSpan(17, 0, 0));
             system.RegisterShift(2, DateTime.Today, new TimeSpan(10, 0, 0), new TimeSpan(19, 0, 0));
             File.AppendAllText(logFile, $"ID: 2; Date: {DateTime.Today.ToShortDateString()}; Time: 10:00-19:00\n");
-            DateTime saturday = new DateTime(2026, 6, 6);
-            system.RegisterShift(3, saturday, new TimeSpan(11, 0, 0), new TimeSpan(19, 0, 0));
-            File.AppendAllText(logFile, $"ID: 3; Date: {saturday.ToShortDateString()}; Time: 11:00-19:00\n");
+            system.RegisterShift(3, DateTime.Today, new TimeSpan(11, 0, 0), new TimeSpan(19, 0, 0));
+            File.AppendAllText(logFile, $"ID: 3; Date: {DateTime.Today.ToShortDateString()}; Time: 11:00-19:00\n");
             system.RegisterShift(4, DateTime.Today, new TimeSpan(9, 0, 0), new TimeSpan(15, 0, 0));
             File.AppendAllText(logFile, $"ID: 4; Date: {DateTime.Today.ToShortDateString()}; Time: 9:00-15:00\n");
             system.RegisterShift(5, DateTime.Today, new TimeSpan(11, 0, 0), new TimeSpan(17, 0, 0));
