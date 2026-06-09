@@ -6,14 +6,14 @@ namespace Project
     enum Role
     {
         Programmer,
-        Disaigner,
+        Designers,
         Composer,
         Tester,
         Moderator
     }
     class Employee
     {
-        public int Id {  get; set; }
+        public int Id { get; set; }
         public string Name { get; set; }
         public Role Position { get; set; }
         public Employee(int id, string name, Role position)
@@ -109,26 +109,26 @@ namespace Project
         public decimal CalculateSalary(Role Position, int totalHours)
         {
             decimal hourlyRate;
-                  switch (Position)
-                 {
-                    case Role.Programmer:
-                        hourlyRate = 800;
-                        break;
-                    case Role.Disaigner:
-                        hourlyRate = 650;
-                        break;
-                    case Role.Composer:
-                        hourlyRate = 650;
-                        break;
-                    case Role.Tester:
-                        hourlyRate = 550;
-                        break;
-                    case Role.Moderator:
-                        hourlyRate = 350;
-                        break;
-                    default:
-                        hourlyRate = 350;
-                        break;
+            switch (Position)
+            {
+                case Role.Programmer:
+                    hourlyRate = 800;
+                    break;
+                case Role.Designers:
+                    hourlyRate = 650;
+                    break;
+                case Role.Composer:
+                    hourlyRate = 650;
+                    break;
+                case Role.Tester:
+                    hourlyRate = 550;
+                    break;
+                case Role.Moderator:
+                    hourlyRate = 350;
+                    break;
+                default:
+                    hourlyRate = 350;
+                    break;
             }
             ;
             return totalHours * hourlyRate;
@@ -150,7 +150,7 @@ namespace Project
             Employee emp1 = new Employee(1, "Programmer_Rust_1", Role.Programmer); //Nicknames for employees
             system.AddEmployee(emp1);
             File.AppendAllText(empFile, $"{emp1.Id};{emp1.Name};{emp1.Position}\n");
-            Employee emp2 = new Employee(2, "Disaigner_1", Role.Disaigner);
+            Employee emp2 = new Employee(2, "Designers_1", Role.Designers);
             system.AddEmployee(emp2);
             File.AppendAllText(empFile, $"{emp2.Id};{emp2.Name};{emp2.Position}\n");
             Employee emp3 = new Employee(3, "Composer_1", Role.Composer);
